@@ -61,8 +61,8 @@ class reader_top_block(gr.top_block):
     # self.usrp_address_source = "addr=192.168.10.2,recv_frame_size=256"
     # self.usrp_address_sink   = "addr=192.168.10.2,recv_frame_size=256"
 
-    self.usrp_address_source = "serial=316B7C7,type=b200"
-    self.usrp_address_sink = "serial=316B7C7,type=b200"
+    self.usrp_address_source = "type=b200"
+    self.usrp_address_sink = "type=b200"
 
     # Each FM0 symbol consists of ADC_RATE/BLF samples (2e6/40e3 = 50 samples)
     # 10 samples per symbol after matched filtering and decimation
