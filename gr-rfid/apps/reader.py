@@ -6,7 +6,6 @@ from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import analog
 from gnuradio import digital
-from gnuradio import qtgui
 import rfid
 
 DEBUG = False
