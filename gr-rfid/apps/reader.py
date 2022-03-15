@@ -1,5 +1,7 @@
 #Developed by: Nikos Kargas
 
+import argparse
+
 from gnuradio import gr
 from gnuradio import uhd
 from gnuradio import blocks
@@ -26,7 +28,7 @@ class reader_top_block(gr.top_block):
     self.source.set_center_freq(self.freq, 0)
     self.source.set_gain(self.rx_gain, 0)
     self.source.set_antenna("RX2", 0)
-    #self.source.set_auto_dc_offset(False) # Uncomment this line for SBX daughterboard
+    self.source.set_auto_dc_offset(False) # Uncomment this line for SBX daughterboard
 
   # Configure usrp sink
   def u_sink(self):
@@ -42,7 +44,7 @@ class reader_top_block(gr.top_block):
     self.sink.set_gain(self.tx_gain, 0)
     self.sink.set_antenna("TX/RX", 0)
 
-  def __init__(self):
+  def __init__(self, args):
     gr.top_block.__init__(self)
 
 
@@ -51,24 +53,24 @@ class reader_top_block(gr.top_block):
     ######## Variables #########
     self.dac_rate = 1e6                 # DAC rate
     self.adc_rate = 100e6/50            # ADC rate (2MS/s complex samples)
-    self.decim     = 5                    # Decimation (downsampling factor)
-    self.ampl     = 0.1                  # Output signal amplitude (signal power vary for different RFX900 cards)
-    self.freq     = 910e6                # Modulation frequency (can be set between 902-920)
-    self.rx_gain   = 20                   # RX Gain (gain at receiver)
-    self.tx_gain   = 0                    # RFX900 no Tx gain option
+    self.decim     = 5                  # Decimation (downsampling factor)
+    self.ampl     = args.ampl           # Output signal amplitude (signal power vary for different RFX900 cards)
+    self.freq     = args.freq           # Modulation frequency (can be set between 902-920)
+    self.rx_gain   = args.rx_gain       # RX Gain (gain at receiver)
+    self.tx_gain   = args.tx_gain       # RFX900 no Tx gain option
 
-    # self.usrp_address_source = "addr=192.168.10.2,recv_frame_size=256"
-    # self.usrp_address_sink   = "addr=192.168.10.2,recv_frame_size=256"
+    self.usrp_address_source = "addr=192.168.10.2,recv_frame_size=1024"
+    self.usrp_address_sink   = "addr=192.168.10.2,recv_frame_size=1024"
 
-    self.usrp_address_source = "type=b200"
-    self.usrp_address_sink = "type=b200"
+    # self.usrp_address_source = "type=b200"
+    # self.usrp_address_sink = "type=b200"
 
     # Each FM0 symbol consists of ADC_RATE/BLF samples (2e6/40e3 = 50 samples)
     # 10 samples per symbol after matched filtering and decimation
     self.num_taps     = [1] * 25 # matched to half symbol period
 
     ######## File sinks for debugging (1 for each block) #########
-    self.file_sink_source         = blocks.file_sink(gr.sizeof_gr_complex*1, "../misc/data/source", False)
+    self.file_sink_source         = blocks.file_sink(gr.sizeof_gr_complex*1, "../misc/data/" + args.output, False)
     self.file_sink_matched_filter = blocks.file_sink(gr.sizeof_gr_complex*1, "../misc/data/matched_filter", False)
     self.file_sink_gate           = blocks.file_sink(gr.sizeof_gr_complex*1, "../misc/data/gate", False)
     self.file_sink_decoder        = blocks.file_sink(gr.sizeof_gr_complex*1, "../misc/data/decoder", False)
@@ -99,7 +101,7 @@ class reader_top_block(gr.top_block):
       self.connect(self.to_complex, self.sink)
 
       #File sinks for logging (Remove comments to log data)
-      #self.connect(self.source, self.file_sink_source)
+      self.connect(self.source, self.file_sink_source)
 
     else :  # Offline Data
       self.file_source               = blocks.file_source(gr.sizeof_gr_complex*1, "../misc/data/file_source_test",False)   ## instead of uhd.usrp_source
@@ -122,7 +124,18 @@ class reader_top_block(gr.top_block):
 
 if __name__ == '__main__':
 
-  main_block = reader_top_block()
+  parser = argparse.ArgumentParser()
+  parser.add_argument("-a,--ampl", dest="ampl", type=float, default=0.1, help="Amplitude of the TX'd signal")
+  parser.add_argument("-t,--tx_gain", dest="tx_gain", type=int, default=0, help="Gain of the TX'd signal")
+  parser.add_argument("-r,--rx_gain", dest="rx_gain", type=int, default=20, help="Gain of the RX'd signal")
+  parser.add_argument("-f,--freq", dest="freq", type=float, default=910e6, help="Frequency of the TX'd signal")
+  parser.add_argument("-o,--output", dest="output", type=str, default="source", help="Filename of output RX plot")
+
+  args = parser.parse_args()
+
+  print(args)
+
+  main_block = reader_top_block(args)
   main_block.start()
 
   while(1):

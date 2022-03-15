@@ -1,0 +1,4 @@
+amespace(ampl=0.9, freq=910000000.0, output='0.9_16_20_910e6.data', rx_gain=20, tx_gain=16)
+Namespace(ampl=0.9, freq=900000000.0, output='0.9_16_20_900e6.data', rx_gain=20, tx_gain=16)
+Namespace(ampl=1.0, freq=910000000.0, output='1_16_20_910e6.data', rx_gain=20, tx_gain=16)
+Namespace(ampl=0.7, freq=910000000.0, output='0.7_16_20_910e6.data', rx_gain=20, tx_gain=16)
