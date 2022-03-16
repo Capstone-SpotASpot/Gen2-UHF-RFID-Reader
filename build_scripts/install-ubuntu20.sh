@@ -209,7 +209,7 @@ sudo ldconfig
 
 # build Gen2-UHF-RFID-Reader
 cd "${START_DIR}"
-git clone --recursive https://github.com/nkargas/Gen2-UHF-RFID-Reader.git
+git clone --recursive git@github.com:Capstone-SpotASpot/Gen2-UHF-RFID-Reader.git
 mkdir -p "${START_DIR}/Gen2-UHF-RFID-Reader/gr-rfid/build"
 cd "${START_DIR}/Gen2-UHF-RFID-Reader/gr-rfid/build"
 cmake ../
