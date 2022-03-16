@@ -27,7 +27,10 @@ The project is based on the RFID Gen2 Reader available at https://github.com/ran
 - Set tx amplitude in apps/reader.py (default: 0.1)
 - Set rx gain in apps/reader.py (default: 20)
 - Set maximum number of queries in include/global_vars.h (default:1000)
-- Set number of inventory round slots in include/global_vars.h (default: 0)
+- **To decode multiple tags**, change const int FIXED_Q so that you increase the number of slots per inventory round.
+  (In global_vars.h: const int FIXED_Q = 0;)
+
+
 
 ## How to run
 
@@ -35,7 +38,7 @@ The project is based on the RFID Gen2 Reader available at https://github.com/ran
 If you use an SBX daughterboard uncomment  #self.source.set_auto_dc_offset(False) in reader.py file
 cd Gen2-UHF-RFID-Reader/gr-rfid/apps/    
 sudo GR_SCHEDULER=STS nice -n -20 python ./reader.py     
-After termination, part of EPC message (hex value of EPC[104:111]) of identified Tags is printed.  
+After termination, part of EPC message (EPC[104:111]) of identified Tags is printed.  
 
 - Offline:  
     Change DEBUG variable in apps/reader.py to TRUE (A test file already exists named file_source_test).  
@@ -82,20 +85,21 @@ Run the software for a few seconds (~5s). A file will be created in misc/data di
 - /misc/data/decoder  
 - /misc/data/reader
 
-Useful discussions on software issues:
+Useful discussions that cover common software issues and fixes:
 
 https://github.com/nkargas/Gen2-UHF-RFID-Reader/issues/1
 
 https://github.com/nkargas/Gen2-UHF-RFID-Reader/issues/4
 
 https://github.com/nkargas/Gen2-UHF-RFID-Reader/issues/10
-
     
 ## Hardware:
 
   - 1x USRPN200/N210  
   - 1x RFX900/SBX daughterboard  
   - 2x circular polarized antennas  
+
+<img src="./example_setup.png" width="300">
 
 ## Tested on:
   Ubuntu 14.04 64-bit  
