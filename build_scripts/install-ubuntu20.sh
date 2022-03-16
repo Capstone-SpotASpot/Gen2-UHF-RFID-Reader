@@ -51,7 +51,7 @@ sudo apt install -y --no-install-recommends \
     libfontconfig1-dev libxrender-dev libpulse-dev swig g++ automake autoconf \
     libtool libfftw3-dev libcppunit-dev libboost-all-dev libusb-dev \
     libusb-1.0-0-dev fort77 libsdl1.2-dev python-wxgtk3.0 \
-    ccache libgsl-dev python-cheetah \
+    ccache libgsl-dev \
     doxygen libusb-1.0-0-dev \
     git-core wget \
     libxi-dev gtk2-engines-pixbuf r-base-dev python-tk liborc-0.4-0 liborc-0.4-dev \
@@ -62,7 +62,7 @@ sudo apt install -y --no-install-recommends \
     pybind11-dev \
     python3-click-plugins python3-click \
     python-mako python3-mako \
-    python-dev python3-dev \
+    python3-dev \
     python3-gi \
     python3-gi-cairo \
     python-lxml python3-lxml \
@@ -72,8 +72,11 @@ sudo apt install -y --no-install-recommends \
     python3-yaml \
     python3-zmq \
     python-six python3-six \
-    python3-pytest
+    python3-pytest \
+    python-cheetah
+
 # dont work:
+# python-dev
 # libcppunit-1.13-0v5 python-scipy qt4-bin-dbg qt4-default qt4-doclibqt4-dev libqt4-dev-bin
 # python-qt4 python-qt4-dbg python-qt4-dev python-qt4-doc libqwt6abi1 libncurses5-dbg
 # libqt4-dev qt4-dev-tools libqwt5-qt4-dev libqwtplot3d-qt4-dev pyqt4-dev-tools qt4-doc
@@ -120,7 +123,7 @@ sudo ldconfig
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib" >> ~/.bashrc
 python -m pip install requests
-sudo python uhd_images_downloader
+sudo python /usr/bin/uhd_images_downloader
 
 # build thrift (for gnuradio)
 # needs to be thrift v10.0
@@ -152,6 +155,8 @@ cd "${START_DIR}/thrift" \
         --prefix=/usr \
     && make -j$(($(nproc)-1)) && sudo make -j$(($(nproc)-1)) install \
     && mv /usr/lib/python2.7/site-packages/thrift /usr/lib/python2.7/dist-packages
+sudo ldconfig
+
 cd "${START_DIR}/thrift" \
     && PYTHON=/usr/bin/python3 ./configure \
         --with-c_glib \
@@ -178,6 +183,7 @@ cd "${START_DIR}/thrift" \
     && make -j$(($(nproc)-1)) \
     && sudo make -j$(($(nproc)-1)) install \
     && mv /usr/lib/python3.6/site-packages/thrift /usr/lib/python3/dist-packages
+sudo ldconfig
 
 # build volk (inside gnuradio)
 cd "${START_DIR}"
