@@ -23,7 +23,9 @@
 include(GrPlatform) #define LIB_SUFFIX
 
 include_directories(${Boost_INCLUDE_DIR})
+#include_directories(${LIBSPOTASPOT_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
+#link_directories(${LIBSPOTASPOT_LIBRARY_DIR})
 
 list(APPEND rfid_sources
     global_vars.cc
@@ -39,7 +41,8 @@ if(NOT rfid_sources)
 endif(NOT rfid_sources)
 
 add_library(gnuradio-rfid SHARED ${rfid_sources})
-target_link_libraries(gnuradio-rfid ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES})
+target_link_libraries(gnuradio-rfid ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} libspotaspot.so)
+add_dependencies(gnuradio-rfid libspotaspot)
 set_target_properties(gnuradio-rfid PROPERTIES DEFINE_SYMBOL "gnuradio_rfid_EXPORTS")
 
 if(APPLE)

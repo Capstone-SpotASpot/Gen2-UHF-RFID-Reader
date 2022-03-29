@@ -1,0 +1,3 @@
+[submodule "gr-rfid/libspotaspot"]
+	path = gr-rfid/libspotaspot
+	url = git@github.com:Capstone-SpotASpot/libspotaspot.git

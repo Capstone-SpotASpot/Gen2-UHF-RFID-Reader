@@ -114,6 +114,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/lib
     ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_BINARY_DIR}/lib
+    ${CMAKE_CURRENT_BINARY_DIR}/libspotaspot/include
+    ${CMAKE_CURRENT_BINARY_DIR}/libspotaspot/lib
     ${CMAKE_BINARY_DIR}/include
     ${Boost_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS}
@@ -124,6 +126,7 @@ link_directories(
     ${Boost_LIBRARY_DIRS}
     ${CPPUNIT_LIBRARY_DIRS}
     ${GNURADIO_RUNTIME_LIBRARY_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}/libspotaspot/lib
 )
 
 # Set component parameters
@@ -152,6 +155,21 @@ add_subdirectory(python)
 add_subdirectory(grc)
 add_subdirectory(apps)
 add_subdirectory(docs)
+
+########################################################################
+# Add subdirectories
+########################################################################
+include(ExternalProject)
+ExternalProject_Add(libspotaspot
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libspotaspot
+    INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/libspotaspot
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND make -C <SOURCE_DIR>
+    BUILD_IN_SOURCE TRUE
+    INSTALL_COMMAND make DESTDIR=<INSTALL_DIR> install
+)
+set(LIBSPOTASPOT_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/libspotaspot/include)
+set(LIBSPOTASPOT_LIBRARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/libspotaspot/lib)
 
 ########################################################################
 # Install cmake search helper for this library
