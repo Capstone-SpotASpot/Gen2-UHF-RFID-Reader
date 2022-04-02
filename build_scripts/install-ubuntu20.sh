@@ -108,7 +108,7 @@ else # log4cpp folder dne
     fi
 fi
 cd "${START_DIR}/log4cpp"
-./configure && make -j$(($(nproc)-1)) && make -j$(($(nproc)-1)) install
+./configure && make -j$(($(nproc)-1)) && sudo make -j$(($(nproc)-1)) install
 
 
 # build uhd
