@@ -1,2 +1,8 @@
 gr-rfid/build/
 **/data/0.*.data
+**/cmake-3.22.1*
+**/log4cpp
+**/uhd/
+**/Gen2-UHF-RFID-Reader/
+**/gnuradio/
+**/thrift/

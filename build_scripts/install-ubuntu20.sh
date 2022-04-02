@@ -42,6 +42,8 @@ sudo apt update -y
 sudo apt install -y --no-install-recommends \
     git swig doxygen build-essential libboost-all-dev \
     libtool libusb-1.0-0 libusb-1.0-0-dev libudev-dev \
+    python python3 \
+    python3-pip \
     libncurses5-dev libfftw3-bin libfftw3-dev libfftw3-doc \
     libcppunit-dev libcppunit-doc ncurses-bin \
     cpufrequtils \
@@ -74,6 +76,10 @@ sudo apt install -y --no-install-recommends \
     python-six python3-six \
     python3-pytest \
     python-cheetah
+
+# might work but dont hold back the other packages
+# needed for gnuradio pythonlibs in order for gnuradio python module to be importable
+sudo apt install -y python-dev python3-dev
 
 # dont work:
 # python-dev
@@ -118,12 +124,16 @@ mkdir -p "${START_DIR}/uhd/host/build"
 cd "${START_DIR}/uhd/host/build"
 cmake  ../
 make -j$(($(nproc)-1))
-sudo make -j$(($(nproc)-1)) install
+sudo make install
 sudo ldconfig
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib" >> ~/.bashrc
+
 python -m pip install requests
-sudo python /usr/bin/uhd_images_downloader
+# can be in 1 of 2 places
+echo "If this command fails, you may need to set python3 as your default python"
+test -f /usr/bin/uhd_images_downloader && sudo python /usr/bin/uhd_images_downloader
+test -f /usr/local/bin/uhd_images_downloader && sudo python /usr/local/bin/uhd_images_downloader
 
 # build thrift (for gnuradio)
 # needs to be thrift v10.0
