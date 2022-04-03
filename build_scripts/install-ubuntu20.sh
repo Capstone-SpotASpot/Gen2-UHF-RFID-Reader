@@ -75,7 +75,8 @@ sudo apt install -y --no-install-recommends \
     python3-zmq \
     python-six python3-six \
     python3-pytest \
-    python-cheetah
+    python-cheetah \
+    libcurl4-openssl-dev
 
 # might work but dont hold back the other packages
 # needed for gnuradio pythonlibs in order for gnuradio python module to be importable
