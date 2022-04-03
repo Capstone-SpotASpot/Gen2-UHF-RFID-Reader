@@ -85,6 +85,7 @@ set(GRC_BLOCKS_DIR      ${GR_PKG_DATA_DIR}/grc/blocks)
 ########################################################################
 find_package(CppUnit)
 find_package(Doxygen)
+find_package(CURL REQUIRED)
 
 # Search for GNU Radio and its components and versions. Add any
 # components required to the list of GR_REQUIRED_COMPONENTS (in all
@@ -120,6 +121,7 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${CPPUNIT_INCLUDE_DIRS}
     ${GNURADIO_ALL_INCLUDE_DIRS}
+    ${CURL_INCLUDE_DIR}
 )
 
 link_directories(
@@ -127,6 +129,7 @@ link_directories(
     ${CPPUNIT_LIBRARY_DIRS}
     ${GNURADIO_RUNTIME_LIBRARY_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}/libspotaspot/lib
+    ${CURL_LIBRARY_DIRS}
 )
 
 # Set component parameters
@@ -170,6 +173,9 @@ ExternalProject_Add(libspotaspot
 )
 set(LIBSPOTASPOT_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/libspotaspot/include)
 set(LIBSPOTASPOT_LIBRARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/libspotaspot/lib)
+install(FILES ${LIBSPOTASPOT_LIBRARY_DIR}/libspotaspot.so
+        TYPE LIB
+)
 
 ########################################################################
 # Install cmake search helper for this library

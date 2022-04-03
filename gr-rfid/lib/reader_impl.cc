@@ -26,6 +26,41 @@
 #include "reader_impl.h"
 #include "rfid/global_vars.h"
 #include <sys/time.h>
+#include <curl/curl.h>
+
+#include "spotaspot.h"
+
+static void send_results(std::map<int, int> &tag_reads)
+{
+    std::cout << "Hello world\n";
+    CURL *curl = curl_easy_init();
+    sas_handle *sas = sas_init(curl, "http://71.167.9.86:31025");
+    if (sas == NULL)
+    {
+        std::cout << "Failed to initialize libspotaspot... closing\n";
+        std::terminate();
+    }
+
+    sas_event event;
+    std::cout << "Assuming reader 1 for now...\n";
+    std::map<int, int>::iterator it;
+    for(it = tag_reads.begin(); it != tag_reads.end(); it++)
+    {
+        event.reader_id = 1;
+        event.tag_id = it->first;
+        event.has_signal_strength = false;
+        if (sas_send_event(sas, &event)) {
+            std::cout << "Sent event with the following parameters\n"
+                << "Reader id: \n" << event.reader_id
+                << "Tag id: \n" << event.tag_id
+                << "No signal strength provided" << std::endl;;
+        }
+        else {
+            std::cout << "Failed to send sas event... closing\n";
+            std::terminate();
+        }
+    }
+}
 
 namespace gr {
   namespace rfid {
@@ -189,6 +224,7 @@ namespace gr {
       }
 
       std::cout << " --------------------------" << std::endl;
+      send_results(reader_state->reader_stats.tag_reads);
     }
 
     void
@@ -443,4 +479,5 @@ namespace gr {
     }
   } /* namespace rfid */
 } /* namespace gr */
+
 
