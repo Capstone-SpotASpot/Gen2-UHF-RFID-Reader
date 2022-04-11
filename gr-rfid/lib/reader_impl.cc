@@ -42,18 +42,30 @@ static void send_results(std::map<int, int> &tag_reads)
     }
 
     sas_event event;
+    event.reader_id = 1;
+    event.has_signal_strength = false;
+
     std::cout << "Assuming reader 1 for now...\n";
     std::map<int, int>::iterator it;
+
+    if (tag_reads.empty()) {
+        sas_event_indicate_clear(&event);
+        if (sas_send_event(sas, &event)) {
+            std::cout << "Notifying server no observations were made." << std::endl;
+        }
+        else {
+            std::cout << "Failed to notify server that no observations were made" << std::endl;
+            std::terminate();
+        }
+    }
+
     for(it = tag_reads.begin(); it != tag_reads.end(); it++)
     {
-        event.reader_id = 1;
         event.tag_id = it->first;
-        event.has_signal_strength = false;
         if (sas_send_event(sas, &event)) {
-            std::cout << "Sent event with the following parameters\n"
-                << "Reader id: \n" << event.reader_id
-                << "Tag id: \n" << event.tag_id
-                << "No signal strength provided" << std::endl;;
+            std::cout << "Sent event with the following parameters:\n"
+                << "Reader id: " << event.reader_id << "\n"
+                << "Tag id: " << event.tag_id << std::endl;
         }
         else {
             std::cout << "Failed to send sas event... closing\n";
